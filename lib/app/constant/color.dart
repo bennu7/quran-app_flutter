@@ -22,6 +22,14 @@ ThemeData themeLight = ThemeData(
     bodyText1: TextStyle(color: appPurpleDark),
     bodyText2: TextStyle(color: appPurpleDark),
   ),
+  listTileTheme: ListTileThemeData(textColor: appPurpleDark),
+  tabBarTheme: TabBarTheme(
+    labelColor: appPurpleDark,
+    unselectedLabelColor: Colors.grey,
+    indicator: BoxDecoration(
+      border: Border(bottom: BorderSide(color: appPurpleDark)),
+    ),
+  ),
 );
 
 ThemeData themeDark = ThemeData(
@@ -37,5 +45,13 @@ ThemeData themeDark = ThemeData(
   textTheme: TextTheme(
     bodyText1: TextStyle(color: appWhite),
     bodyText2: TextStyle(color: appWhite),
+  ),
+  listTileTheme: ListTileThemeData(textColor: appWhite),
+  tabBarTheme: TabBarTheme(
+    labelColor: appWhite,
+    unselectedLabelColor: Colors.grey,
+    indicator: BoxDecoration(
+      border: Border(bottom: BorderSide(color: appWhite)),
+    ),
   ),
 );
