@@ -1,3 +1,4 @@
+import 'package:alquran/app/constant/color.dart';
 import 'package:alquran/app/data/models/detailSurah.dart' as detail;
 import 'package:alquran/app/data/models/surah.dart';
 import 'package:flutter/material.dart';
@@ -21,25 +22,64 @@ class DetailSurahView extends GetView<DetailSurahController> {
       body: ListView(
         padding: EdgeInsets.all(20),
         children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  Text(
-                    '${surah.name?.transliteration?.id?.toUpperCase() ?? "Error.."}',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    '( ${surah.name?.translation?.id?.toUpperCase() ?? "Error.."} )',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    '${surah.numberOfVerses ?? "Error.."} Ayat | ${surah.revelation?.id}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
+          GestureDetector(
+            onTap: () => Get.dialog(Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              child: Container(
+                padding: EdgeInsets.all(25),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Get.isDarkMode
+                      ? appPurpleLight1.withOpacity(0.3)
+                      : appWhite,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "TAFSIR ${surah.name?.transliteration?.id}",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      "${surah.tafsir?.id ?? 'Tidak ada data pada tafsir ini'}",
+                      style: TextStyle(),
+                      textAlign: TextAlign.justify,
+                    ),
+                  ],
+                ),
+              ),
+            )),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                gradient:
+                    LinearGradient(colors: [appPurpleLight1, appPurpleDark]),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    Text(
+                      '${surah.name?.transliteration?.id?.toUpperCase() ?? "Error.."}',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: appWhite),
+                    ),
+                    Text(
+                      '( ${surah.name?.translation?.id?.toUpperCase() ?? "Error.."} )',
+                      style: TextStyle(fontSize: 16, color: appWhite),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      '${surah.numberOfVerses ?? "Error.."} Ayat | ${surah.revelation?.id}',
+                      style: TextStyle(fontSize: 16, color: appWhite),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -71,15 +111,32 @@ class DetailSurahView extends GetView<DetailSurahController> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Card(
+                        Container(
+                          decoration: BoxDecoration(
+                            color: appPurpleLight2.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          // color: Colors.grey[100],
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 5, horizontal: 10),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CircleAvatar(
-                                  child: Text('${index + 1}'),
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(Get.isDarkMode
+                                          ? "assets/images/list_light.png"
+                                          : "assets/images/list_dark.png"),
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text("${index + 1}"),
+                                  ),
                                 ),
                                 Row(
                                   children: [
