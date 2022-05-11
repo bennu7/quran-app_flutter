@@ -154,10 +154,13 @@ class DetailSurahView extends GetView<DetailSurahController> {
                           ),
                         ),
                         SizedBox(height: 15),
-                        Text(
-                          "${ayat!.text?.arab}",
-                          style: TextStyle(fontSize: 25),
-                          textAlign: TextAlign.right,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 25),
+                          child: Text(
+                            "${ayat!.text?.arab}",
+                            style: TextStyle(fontSize: 25),
+                            textAlign: TextAlign.right,
+                          ),
                         ),
                         SizedBox(height: 10),
                         Text(
