@@ -1,4 +1,5 @@
 import 'package:alquran/app/constant/color.dart';
+import 'package:alquran/app/data/models/juz.dart';
 import 'package:alquran/app/data/models/surah.dart';
 import 'package:alquran/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
@@ -195,39 +196,80 @@ class HomeView extends GetView<HomeController> {
                       },
                     ),
                     // Juz
-                    ListView.builder(
-                      itemCount: 30,
-                      itemBuilder: ((context, index) {
-                        return ListTile(
-                          onTap: () {
-                            //
-                          },
-                          leading: Obx(
-                            () => Container(
-                              width: 35,
-                              height: 35,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                    controller.isDark.isTrue
-                                        ? "assets/images/list_light.png"
-                                        : "assets/images/list_dark.png",
+                    FutureBuilder<List<Juz>>(
+                      future: controller.getAllJuz(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                                color: appPurpleLight2),
+                          );
+                        }
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: Text("Tidak ada data"),
+                          );
+                        }
+                        return ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            // ambil data per surah
+                            Juz detailJuz = snapshot.data![index];
+                            return ListTile(
+                              contentPadding:
+                                  EdgeInsets.only(top: 7, bottom: 15),
+                              onTap: () {
+                                Get.toNamed(Routes.DETAIL_JUZ,
+                                    arguments: detailJuz);
+                              },
+                              leading: Obx(
+                                () => Container(
+                                  width: 35,
+                                  height: 35,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(
+                                        controller.isDark.isTrue
+                                            ? "assets/images/list_light.png"
+                                            : "assets/images/list_dark.png",
+                                      ),
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "${index + 1}",
+                                      style: TextStyle(
+                                        color: Get.isDarkMode
+                                            ? appWhite
+                                            : appPurpleDark,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                              child: Center(
-                                  child: Text(
-                                "${index + 1}",
-                              )),
-                            ),
-                          ),
-                          title: Text("Juz ${index + 1}"),
+                              // isThreeLine: true,
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Mulai dari surah ${detailJuz.start}",
+                                    style: TextStyle(color: Colors.grey[500]),
+                                  ),
+                                  Text(
+                                    "hingga surah ${detailJuz.end}",
+                                    style: TextStyle(color: Colors.grey[500]),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         );
-                      }),
+                      },
                     ),
                     // Bookmark
                     Center(
-                      child: Text("data 3"),
+                      child: Text("Data 3"),
                     ),
                   ],
                 ),
