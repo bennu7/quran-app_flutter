@@ -216,12 +216,40 @@ class HomeView extends GetView<HomeController> {
                           itemBuilder: (context, index) {
                             // ambil data per surah
                             Juz detailJuz = snapshot.data![index];
+                            // untuk memecah nama surah agar bisa baca nama ayatnya
+                            String nameStart =
+                                detailJuz.start?.split(" - ").first ?? " ";
+                            String nameEnd =
+                                detailJuz.end?.split(" - ").first ?? " ";
+
+                            List<Surah> rawAllSurahInJuz = [];
+                            List<Surah> allSurahInJuz = [];
+                            //dilooping agar mendapatkan list surah per item dari controller
+                            // gunakan 2 kali looping karena looping yang pertama untuk mendapatkan nama akhir surah dari tiap juz,
+                            // kemudian looping kedua akan melakukan reversed (memutar kembali) untuk mendapatkan list nama tiap surah dari tiap juz
+                            for (Surah item in controller.allSurah) {
+                              rawAllSurahInJuz.add(item);
+                              // melakukan perbandingan untuk mencocokkan nama surah dari model Surah dan Juz
+                              if (item.name!.transliteration!.id == nameEnd) {
+                                break;
+                              }
+                            }
+                            // reversed => memutar kembali
+                            for (Surah item
+                                in rawAllSurahInJuz.reversed.toList()) {
+                              allSurahInJuz.add(item);
+                              if (item.name!.transliteration!.id == nameStart) {
+                                break;
+                              }
+                            }
                             return ListTile(
                               contentPadding:
                                   EdgeInsets.only(top: 7, bottom: 15),
                               onTap: () {
-                                Get.toNamed(Routes.DETAIL_JUZ,
-                                    arguments: detailJuz);
+                                Get.toNamed(Routes.DETAIL_JUZ, arguments: {
+                                  "juz": detailJuz,
+                                  "surah": allSurahInJuz.reversed.toList()
+                                });
                               },
                               leading: Obx(
                                 () => Container(
@@ -252,13 +280,29 @@ class HomeView extends GetView<HomeController> {
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    "Mulai dari surah ${detailJuz.start}",
-                                    style: TextStyle(color: Colors.grey[500]),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Mulai dari surah ",
+                                        style:
+                                            TextStyle(color: Colors.grey[500]),
+                                      ),
+                                      Text(
+                                        "${detailJuz.start}",
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    "hingga surah ${detailJuz.end}",
-                                    style: TextStyle(color: Colors.grey[500]),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "hingga surah ",
+                                        style:
+                                            TextStyle(color: Colors.grey[500]),
+                                      ),
+                                      Text(
+                                        "${detailJuz.end}",
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
