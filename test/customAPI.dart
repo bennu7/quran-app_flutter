@@ -16,7 +16,7 @@ void main() async {
 
     Map<String, dynamic> rawData = json.decode(res.body)["data"];
 
-    //dataSurah ini akan bertipe List, jadi mapping lagi menggunakan forEach
+// dataSurah ini akan bertipe List, jadi mapping lagi menggunakan forEach
     DetailSurah dataSurah = DetailSurah.fromJson(rawData);
 
     // karena ada kemungkinan null data
@@ -28,7 +28,14 @@ void main() async {
             "ayat": ayat,
           });
         } else {
-          // juz nya bertambah
+          // jika juz nya bertambah
+          print("=======");
+          print("BERHASIL MEMASUKKAN JUZ ${juz}");
+          print("START :");
+          print("Ayat : ${(penampungAyat[0]["ayat"] as Verse).text?.arab}");
+          print("END :");
+          print(
+              "Ayat : ${(penampungAyat[penampungAyat.length - 1]["ayat"] as Verse).text?.arab}");
           allJuz.add({
             "juz": juz,
             // "surah": dataSurah.name?.transliteration?.id ?? '',
@@ -36,14 +43,8 @@ void main() async {
             "end": penampungAyat[penampungAyat.length - 1],
             "verses": penampungAyat,
           });
-          // print("${juz}");
-          // print("----------");
-          // print("${penampungAyat}");
-          // print("==========");
-          // agar melakukan looping untuk mendapatkan data di semua juz
           juz++;
-          // penampungAyat.clear();
-          penampungAyat = [];
+          penampungAyat.clear();
           penampungAyat.add({
             "surah": dataSurah.name?.transliteration?.id ?? '',
             "ayat": ayat,
@@ -54,6 +55,13 @@ void main() async {
   }
 
 // untuk mendapatkan juz terakhir/juz 3
+  print("=======");
+  print("BERHASIL MEMASUKKAN JUZ ${juz}");
+  print("START :");
+  print("Ayat : ${(penampungAyat[0]["ayat"] as Verse).text?.arab}");
+  print("END :");
+  print(
+      "Ayat : ${(penampungAyat[penampungAyat.length - 1]["ayat"] as Verse).text?.arab}");
   allJuz.add({
     "juz": juz,
     // "surah": dataSurah.name?.transliteration?.id ?? '',
@@ -61,6 +69,4 @@ void main() async {
     "end": penampungAyat[penampungAyat.length - 1],
     "verses": penampungAyat,
   });
-
-  print(allJuz[28]['verses']);
 }

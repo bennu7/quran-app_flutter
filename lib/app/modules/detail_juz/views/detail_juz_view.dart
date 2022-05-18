@@ -1,6 +1,5 @@
 import 'package:alquran/app/constant/color.dart';
-import 'package:alquran/app/data/models/juz.dart';
-import 'package:alquran/app/data/models/surah.dart';
+import 'package:alquran/app/data/models/detailSurah.dart' as detail;
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -8,41 +7,89 @@ import 'package:get/get.dart';
 import '../controllers/detail_juz_controller.dart';
 
 class DetailJuzView extends GetView<DetailJuzController> {
-  final Juz detailJuz = Get.arguments["juz"];
-  final List<Surah> allSurahInThisJuz = Get.arguments["surah"];
+  final Map<String, dynamic> dataMapPerJuz = Get.arguments;
   @override
   Widget build(BuildContext context) {
-    allSurahInThisJuz.forEach((element) {
-      print(element.name!.transliteration!.id);
-    });
+    print(dataMapPerJuz);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Juz ${detailJuz.juz}'),
+        title: Text('Juz ${dataMapPerJuz["juz"]}'),
         centerTitle: true,
       ),
       body: ListView.builder(
         padding: EdgeInsets.all(20),
-        itemCount: detailJuz.verses?.length ?? 0,
+        itemCount: (dataMapPerJuz["verses"] as List).length,
         itemBuilder: (context, index) {
-          if (detailJuz.verses == null || detailJuz.verses?.length == 0) {
+          if ((dataMapPerJuz["verses"] as List).length == 0) {
             return Center(
               child: Text("Tidak ada data"),
             );
           }
-          Verses ayat = detailJuz.verses![index];
-          // untuk mengkondisikan masuk ke surah apa
-          print(index);
-          if (index != 0) {
-            // jika tidak bertemu surah dengan index ke 0, maka pindah nama surah
-            if (ayat.number?.inSurah == 1) {
-              controller.index++;
-            }
-          }
-          print('after if cek : ${index}');
+
+          Map<String, dynamic> ayat = dataMapPerJuz["verses"][index];
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
+              if ((ayat["ayat"] as detail.Verse).number?.inSurah == 1)
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    GestureDetector(
+                      // onTap: () => Get.dialog(
+                      //   Dialog(
+                      //     shape: RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.circular(20)),
+                      //     child: Container(
+                      //       padding: EdgeInsets.all(25),
+                      //       decoration: BoxDecoration(
+                      //         borderRadius: BorderRadius.circular(20),
+                      //         color: Get.isDarkMode
+                      //             ? appPurpleLight1.withOpacity(0.3)
+                      //             : appWhite,
+                      //       ),
+                      //       child: Column(
+                      //         mainAxisSize: MainAxisSize.min,
+                      //         children: [
+                      //           Text(
+                      //             "TAFSIR ${surah.name?.transliteration?.id}",
+                      //             style: TextStyle(
+                      //                 fontWeight: FontWeight.bold,
+                      //                 fontSize: 20),
+                      //           ),
+                      //           SizedBox(height: 20),
+                      //           Text(
+                      //             "${surah.tafsir?.id ?? 'Tidak ada data pada tafsir ini'}",
+                      //             style: TextStyle(),
+                      //             textAlign: TextAlign.justify,
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: LinearGradient(
+                              colors: [appPurpleLight1, appPurpleDark]),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Text(
+                            '${ayat["surah"]}',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: appWhite,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                  ],
+                ),
               Container(
                 decoration: BoxDecoration(
                   color: appPurpleLight1.withOpacity(0.3),
@@ -71,11 +118,12 @@ class DetailJuzView extends GetView<DetailJuzController> {
                               ),
                             ),
                             child: Center(
-                              child: Text("${ayat.number?.inSurah}"),
+                              child: Text(
+                                  "${(ayat['ayat'] as detail.Verse).number?.inSurah}"),
                             ),
                           ),
                           Text(
-                            "${allSurahInThisJuz[controller.index].name?.transliteration?.id ?? ''}",
+                            "${ayat['surah']}",
                             style: TextStyle(
                                 fontStyle: FontStyle.italic, fontSize: 15),
                           )
@@ -98,20 +146,20 @@ class DetailJuzView extends GetView<DetailJuzController> {
               Padding(
                 padding: const EdgeInsets.only(left: 25),
                 child: Text(
-                  "${ayat.text?.arab}",
+                  "${(ayat['ayat'] as detail.Verse).text?.arab}",
                   style: TextStyle(fontSize: 25),
                   textAlign: TextAlign.right,
                 ),
               ),
               SizedBox(height: 10),
               Text(
-                "${ayat.text?.transliteration?.en}",
+                "${(ayat['ayat'] as detail.Verse).text?.transliteration?.en}",
                 style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
                 textAlign: TextAlign.right,
               ),
               SizedBox(height: 20),
               Text(
-                "${ayat.translation?.id}",
+                "${(ayat['ayat'] as detail.Verse).translation?.id}",
                 style: TextStyle(fontSize: 18),
                 textAlign: TextAlign.justify,
               ),

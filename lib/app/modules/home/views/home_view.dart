@@ -1,6 +1,6 @@
 import 'package:alquran/app/constant/color.dart';
-import 'package:alquran/app/data/models/juz.dart';
 import 'package:alquran/app/data/models/surah.dart';
+import 'package:alquran/app/data/models/detailSurah.dart' as detailJuz;
 import 'package:alquran/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 
@@ -196,9 +196,9 @@ class HomeView extends GetView<HomeController> {
                       },
                     ),
                     // Juz
-                    FutureBuilder<List<Juz>>(
+                    FutureBuilder<List<Map<String, dynamic>>>(
                       future: controller.getAllJuz(),
-                      builder: (context, snapshot) {
+                      builder: ((context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return Center(
@@ -214,42 +214,16 @@ class HomeView extends GetView<HomeController> {
                         return ListView.builder(
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
-                            // ambil data per surah
-                            Juz detailJuz = snapshot.data![index];
-                            // untuk memecah nama surah agar bisa baca nama ayatnya
-                            String nameStart =
-                                detailJuz.start?.split(" - ").first ?? " ";
-                            String nameEnd =
-                                detailJuz.end?.split(" - ").first ?? " ";
-
-                            List<Surah> rawAllSurahInJuz = [];
-                            List<Surah> allSurahInJuz = [];
-                            //dilooping agar mendapatkan list surah per item dari controller
-                            // gunakan 2 kali looping karena looping yang pertama untuk mendapatkan nama akhir surah dari tiap juz,
-                            // kemudian looping kedua akan melakukan reversed (memutar kembali) untuk mendapatkan list nama tiap surah dari tiap juz
-                            for (Surah item in controller.allSurah) {
-                              rawAllSurahInJuz.add(item);
-                              // melakukan perbandingan untuk mencocokkan nama surah dari model Surah dan Juz
-                              if (item.name!.transliteration!.id == nameEnd) {
-                                break;
-                              }
-                            }
-                            // reversed => memutar kembali
-                            for (Surah item
-                                in rawAllSurahInJuz.reversed.toList()) {
-                              allSurahInJuz.add(item);
-                              if (item.name!.transliteration!.id == nameStart) {
-                                break;
-                              }
-                            }
+                            // kirim data argument dataMapPerJuz untuk ditangkap ke page detail_juz
+                            Map<String, dynamic> dataMapPerJuz =
+                                snapshot.data![index];
+                            print(dataMapPerJuz);
                             return ListTile(
                               contentPadding:
                                   EdgeInsets.only(top: 7, bottom: 15),
                               onTap: () {
-                                Get.toNamed(Routes.DETAIL_JUZ, arguments: {
-                                  "juz": detailJuz,
-                                  "surah": allSurahInJuz.reversed.toList()
-                                });
+                                Get.toNamed(Routes.DETAIL_JUZ,
+                                    arguments: dataMapPerJuz);
                               },
                               leading: Obx(
                                 () => Container(
@@ -288,19 +262,19 @@ class HomeView extends GetView<HomeController> {
                                             TextStyle(color: Colors.grey[500]),
                                       ),
                                       Text(
-                                        "${detailJuz.start}",
+                                        "${dataMapPerJuz['start']['surah']} ayat ${(dataMapPerJuz['start']['ayat'] as detailJuz.Verse).number?.inSurah}",
                                       ),
                                     ],
                                   ),
                                   Row(
                                     children: [
                                       Text(
-                                        "hingga surah ",
+                                        "hingga surah",
                                         style:
                                             TextStyle(color: Colors.grey[500]),
                                       ),
                                       Text(
-                                        "${detailJuz.end}",
+                                        "${dataMapPerJuz['end']['surah']} ayat ${(dataMapPerJuz['end']['ayat'] as detailJuz.Verse).number?.inSurah}",
                                       ),
                                     ],
                                   ),
@@ -309,7 +283,7 @@ class HomeView extends GetView<HomeController> {
                             );
                           },
                         );
-                      },
+                      }),
                     ),
                     // Bookmark
                     Center(
