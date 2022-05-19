@@ -1,14 +1,31 @@
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:alquran/app/data/models/detailSurah.dart';
 
+import '../../../constant/color.dart';
 import '../../../data/models/surah.dart';
 
 class HomeController extends GetxController {
   List<Surah> allSurah = [];
-
   RxBool isDark = false.obs;
+
+  void changeThemeMode() async {
+    Get.isDarkMode ? Get.changeTheme(themeLight) : Get.changeTheme(themeDark);
+    isDark.toggle();
+
+    final box = GetStorage();
+
+    if (Get.isDarkMode) {
+      // dark->light
+      box.remove("themeDark");
+    } else {
+      // light->dark
+      box.write("themeDark", true);
+    }
+  }
+
   Future<List<Surah>> getAllSurah() async {
     Uri url = Uri.parse("https://api.quran.sutanlab.id/surah");
     var res = await http.get(url);
