@@ -217,7 +217,6 @@ class HomeView extends GetView<HomeController> {
                             // kirim data argument dataMapPerJuz untuk ditangkap ke page detail_juz
                             Map<String, dynamic> dataMapPerJuz =
                                 snapshot.data![index];
-                            print(dataMapPerJuz);
                             return ListTile(
                               contentPadding:
                                   EdgeInsets.only(top: 7, bottom: 15),
@@ -262,7 +261,7 @@ class HomeView extends GetView<HomeController> {
                                             TextStyle(color: Colors.grey[500]),
                                       ),
                                       Text(
-                                        "${dataMapPerJuz['start']['surah']} ayat ${(dataMapPerJuz['start']['ayat'] as detailJuz.Verse).number?.inSurah}",
+                                        "${(dataMapPerJuz['start']['surah'] as detailJuz.DetailSurah).name?.transliteration?.id} ayat ${(dataMapPerJuz['start']['ayat'] as detailJuz.Verse).number?.inSurah}",
                                       ),
                                     ],
                                   ),
@@ -274,7 +273,7 @@ class HomeView extends GetView<HomeController> {
                                             TextStyle(color: Colors.grey[500]),
                                       ),
                                       Text(
-                                        "${dataMapPerJuz['end']['surah']} ayat ${(dataMapPerJuz['end']['ayat'] as detailJuz.Verse).number?.inSurah}",
+                                        "${(dataMapPerJuz['end']['surah'] as detailJuz.DetailSurah).name?.transliteration?.id} ayat ${(dataMapPerJuz['end']['ayat'] as detailJuz.Verse).number?.inSurah}",
                                       ),
                                     ],
                                   ),
